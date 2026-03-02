@@ -6,9 +6,15 @@ if [ -z "${APP_KEY:-}" ]; then
   exit 1
 fi
 
+mkdir -p storage/framework/cache \
+  storage/framework/sessions \
+  storage/framework/views \
+  storage/logs \
+  bootstrap/cache
+
 php artisan config:clear
-php artisan route:clear
-php artisan view:clear
+php artisan route:clear || true
+php artisan view:clear || true
 php artisan migrate --force --no-interaction
 
 if [ "${RUN_DB_SEED_ON_BOOT}" = "true" ]; then
