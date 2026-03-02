@@ -58,7 +58,7 @@ services:
     runtime: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: ./Dockerfile.worker
     startCommand: bash /var/www/html/docker/start-worker.sh
     envVars:
       - key: APP_ENV
