@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-if [ -z "$APP_KEY" ]; then
-  php artisan key:generate --force --no-interaction
+if [ -z "${APP_KEY:-}" ]; then
+  echo "APP_KEY is not set. Configure APP_KEY in Render environment variables."
+  exit 1
 fi
 
 php artisan config:clear
