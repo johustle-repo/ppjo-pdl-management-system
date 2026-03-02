@@ -6,6 +6,11 @@ if [ -z "${APP_KEY:-}" ]; then
   exit 1
 fi
 
+# Force file-backed runtime storage for shell-less/free deployments.
+# This avoids 500 errors when database-backed session/cache tables are missing.
+export SESSION_DRIVER=file
+export CACHE_STORE=file
+
 mkdir -p storage/framework/cache \
   storage/framework/sessions \
   storage/framework/views \
