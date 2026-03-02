@@ -19,6 +19,9 @@ return [
 
     'default' => env('DB_CONNECTION', 'sqlite'),
 
+    'mongodb_mirror_enabled' => (bool) env('MONGODB_MIRROR_ENABLED', false),
+    'mongodb_mirror_collection' => env('MONGODB_MIRROR_COLLECTION', 'pdls_mirror'),
+
     /*
     |--------------------------------------------------------------------------
     | Database Connections
@@ -112,6 +115,12 @@ return [
             'prefix_indexes' => true,
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
+
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'dsn' => env('MONGODB_URI'),
+            'database' => env('MONGODB_DATABASE', env('DB_DATABASE', 'pdl_db')),
         ],
 
     ],
