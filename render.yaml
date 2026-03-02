@@ -15,7 +15,7 @@ services:
       - key: APP_URL
         sync: false
       - key: APP_KEY
-        generateValue: true
+        value: base64:aq3HV7grgQwWN3qEPyawwoDAH5zJhfgYEezqIVhg2yU=
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_URL
@@ -64,7 +64,7 @@ services:
       - key: APP_URL
         sync: false
       - key: APP_KEY
-        sync: false
+        value: base64:aq3HV7grgQwWN3qEPyawwoDAH5zJhfgYEezqIVhg2yU=
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_URL
