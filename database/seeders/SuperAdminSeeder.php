@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class SuperAdminSeeder extends Seeder
 {
@@ -14,8 +15,8 @@ class SuperAdminSeeder extends Seeder
      */
     public function run(): void
     {
-        $name = (string) env('SUPERADMIN_NAME', 'Jail Officer');
-        $email = (string) env('SUPERADMIN_EMAIL', 'jailofficer@ppjo.local');
+        $name = trim((string) env('SUPERADMIN_NAME', 'Jail Officer'));
+        $email = strtolower(trim((string) env('SUPERADMIN_EMAIL', 'jailofficer@ppjo.local')));
         $password = (string) env('SUPERADMIN_PASSWORD', 'ChangeMe123!');
 
         $superAdminRole = Role::firstOrCreate(
@@ -27,7 +28,7 @@ class SuperAdminSeeder extends Seeder
             ['email' => $email],
             [
                 'name' => $name,
-                'password' => $password,
+                'password' => Hash::make($password),
                 'is_active' => true,
                 'email_verified_at' => Carbon::now(),
             ]
