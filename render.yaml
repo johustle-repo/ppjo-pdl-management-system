@@ -12,6 +12,10 @@ services:
         value: production
       - key: APP_DEBUG
         value: "false"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: debug
       - key: APP_URL
         sync: false
       - key: APP_KEY
@@ -61,6 +65,10 @@ services:
         value: production
       - key: APP_DEBUG
         value: "false"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: debug
       - key: APP_URL
         sync: false
       - key: APP_KEY
