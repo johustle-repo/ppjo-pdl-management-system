@@ -44,6 +44,8 @@ services:
         value: file
       - key: QUEUE_CONNECTION
         value: database
+      - key: RUN_MIGRATIONS_ON_BOOT
+        value: "false"
       - key: RUN_DB_SEED_ON_BOOT
         value: "false"
       - key: MONGODB_MIRROR_ENABLED

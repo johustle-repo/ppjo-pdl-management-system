@@ -23,7 +23,10 @@ chmod -R ug+rwx storage bootstrap/cache || true
 php artisan config:clear
 php artisan route:clear || true
 php artisan view:clear || true
-php artisan migrate --force --no-interaction
+
+if [ "${RUN_MIGRATIONS_ON_BOOT}" = "true" ]; then
+  php artisan migrate --force --no-interaction
+fi
 
 if [ "${RUN_DB_SEED_ON_BOOT}" = "true" ]; then
   php artisan db:seed --force --no-interaction
