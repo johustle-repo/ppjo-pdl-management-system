@@ -16,8 +16,8 @@ FROM php:8.4-apache
 WORKDIR /var/www/html
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git unzip libzip-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo_mysql bcmath pcntl \
+    && apt-get install -y --no-install-recommends git unzip libzip-dev libonig-dev libxml2-dev libpq-dev \
+    && docker-php-ext-install pdo_mysql pdo_pgsql bcmath pcntl \
     && rm -rf /var/lib/apt/lists/*
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
