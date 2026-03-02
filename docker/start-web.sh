@@ -17,6 +17,9 @@ mkdir -p storage/framework/cache \
   storage/logs \
   bootstrap/cache
 
+chown -R www-data:www-data storage bootstrap/cache || true
+chmod -R ug+rwx storage bootstrap/cache || true
+
 php artisan config:clear
 php artisan route:clear || true
 php artisan view:clear || true
