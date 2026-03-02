@@ -17,7 +17,7 @@ services:
       - key: LOG_LEVEL
         value: debug
       - key: APP_URL
-        sync: false
+        value: https://ppjo-pdl-management-system.onrender.com
       - key: APP_KEY
         value: base64:aq3HV7grgQwWN3qEPyawwoDAH5zJhfgYEezqIVhg2yU=
       - key: DB_CONNECTION
@@ -70,7 +70,7 @@ services:
       - key: LOG_LEVEL
         value: debug
       - key: APP_URL
-        sync: false
+        value: https://ppjo-pdl-management-system.onrender.com
       - key: APP_KEY
         value: base64:aq3HV7grgQwWN3qEPyawwoDAH5zJhfgYEezqIVhg2yU=
       - key: DB_CONNECTION
