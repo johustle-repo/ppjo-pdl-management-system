@@ -32,6 +32,10 @@ if [ "${RUN_DB_SEED_ON_BOOT}" = "true" ]; then
   php artisan db:seed --force --no-interaction
 fi
 
+if [ "${RUN_SUPERADMIN_SEED_ON_BOOT}" = "true" ]; then
+  php artisan db:seed --class=SuperAdminSeeder --force --no-interaction
+fi
+
 php artisan storage:link || true
 
 exec apache2-foreground

@@ -48,6 +48,8 @@ services:
         value: "false"
       - key: RUN_DB_SEED_ON_BOOT
         value: "false"
+      - key: RUN_SUPERADMIN_SEED_ON_BOOT
+        value: "true"
       - key: MONGODB_MIRROR_ENABLED
         value: "false"
       - key: MONGODB_URI
