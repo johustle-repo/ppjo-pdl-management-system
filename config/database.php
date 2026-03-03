@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     'mongodb_mirror_enabled' => (bool) env('MONGODB_MIRROR_ENABLED', false),
     'mongodb_mirror_collection' => env('MONGODB_MIRROR_COLLECTION', 'pdls_mirror'),
@@ -191,3 +191,4 @@ return [
     ],
 
 ];
+

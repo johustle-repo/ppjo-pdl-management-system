@@ -23,7 +23,7 @@ services:
       - key: APP_KEY
         value: base64:aq3HV7grgQwWN3qEPyawwoDAH5zJhfgYEezqIVhg2yU=
       - key: DB_CONNECTION
-        value: pgsql
+        value: mysql
       - key: DB_URL
         sync: false
       - key: DB_HOST
@@ -82,7 +82,7 @@ services:
       - key: APP_KEY
         value: base64:aq3HV7grgQwWN3qEPyawwoDAH5zJhfgYEezqIVhg2yU=
       - key: DB_CONNECTION
-        value: pgsql
+        value: mysql
       - key: DB_URL
         sync: false
       - key: DB_HOST
@@ -111,3 +111,4 @@ services:
         sync: false
       - key: MONGODB_MIRROR_COLLECTION
         value: pdls_mirror
+
