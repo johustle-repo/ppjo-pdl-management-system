@@ -11,6 +11,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
@@ -148,8 +149,10 @@ export default function PdlProfiles({
     const [bulkTransferredTo, setBulkTransferredTo] = useState('');
     const [bulkHearingDate, setBulkHearingDate] = useState('');
     const [bulkHearingNotes, setBulkHearingNotes] = useState('');
-    const page = usePage<{ flash?: { success?: string } }>();
+    const page = usePage<{ flash?: { success?: string; photo_saved?: boolean } }>();
     const successMessage = page.props.flash?.success;
+    const photoSaved = page.props.flash?.photo_saved === true;
+    const [showPhotoSnackbar, setShowPhotoSnackbar] = useState(false);
 
     const editForm = useForm<EditFormData>({
         surname: '',
@@ -239,6 +242,16 @@ export default function PdlProfiles({
         }
     }, [selected_pdl]);
 
+    useEffect(() => {
+        if (!photoSaved) {
+            return;
+        }
+
+        setShowPhotoSnackbar(true);
+        const timer = setTimeout(() => setShowPhotoSnackbar(false), 2600);
+        return () => clearTimeout(timer);
+    }, [photoSaved]);
+
     const submitEdit = (event: FormEvent) => {
         event.preventDefault();
 
@@ -246,7 +259,7 @@ export default function PdlProfiles({
             return;
         }
 
-        editForm.put(`/pdls/${selectedPdl.id}`, {
+        const requestOptions = {
             preserveScroll: true,
             forceFormData: true,
             onSuccess: () => {
@@ -254,6 +267,18 @@ export default function PdlProfiles({
                 setSelectedPdl(null);
                 editForm.reset();
             },
+        };
+
+        if (editForm.data.profile_photo) {
+            editForm.transform((data) => ({ ...data, _method: 'put' }));
+            editForm.post(`/pdls/${selectedPdl.id}`, requestOptions);
+            return;
+        }
+
+        editForm.transform((data) => data);
+        editForm.put(`/pdls/${selectedPdl.id}`, {
+            preserveScroll: true,
+            onSuccess: requestOptions.onSuccess,
         });
     };
     const submitCreate = (event: FormEvent) => {
@@ -578,6 +603,7 @@ export default function PdlProfiles({
                         <Input
                             type="file"
                             accept="image/*"
+                            className="file:bg-blue-400 file:text-blue-950 hover:file:bg-blue-300 file:rounded-md file:px-3"
                             onChange={(event) =>
                                 createForm.setData(
                                     'profile_photo',
@@ -585,6 +611,7 @@ export default function PdlProfiles({
                                 )
                             }
                         />
+                        <InputError message={createForm.errors.profile_photo} />
                         <Input
                             type="date"
                             value={createForm.data.next_hearing_date}
@@ -732,6 +759,7 @@ export default function PdlProfiles({
                                     <Input
                                         type="file"
                                         accept="image/*"
+                                        className="file:bg-blue-400 file:text-blue-950 hover:file:bg-blue-300 file:rounded-md file:px-3"
                                         onChange={(event) =>
                                             editForm.setData(
                                                 'profile_photo',
@@ -739,6 +767,7 @@ export default function PdlProfiles({
                                             )
                                         }
                                     />
+                                    <InputError message={editForm.errors.profile_photo} />
                                     <Input
                                         type="date"
                                         value={editForm.data.next_hearing_date}
@@ -805,7 +834,7 @@ export default function PdlProfiles({
                                 </form>
                             ) : (
                                 <>
-                                    <div className="space-y-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
+                                    <div className="space-y-4 rounded-lg border border-blue-200 bg-blue-50 p-4 text-slate-900 dark:border-blue-400/40 dark:bg-blue-950/20 dark:text-slate-100">
                                         <div className="flex items-center gap-3">
                                             {selectedPdl.profile_photo_url ? (
                                                 <img
@@ -814,18 +843,18 @@ export default function PdlProfiles({
                                                     className="h-20 w-20 rounded-full border-2 border-blue-300 object-cover"
                                                 />
                                             ) : (
-                                                <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-white text-xs text-blue-700">
+                                                <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-white text-xs text-blue-700 dark:border-blue-300/50 dark:bg-blue-900/40 dark:text-blue-200">
                                                     No Photo
                                                 </div>
                                             )}
                                             <div className="min-w-0">
-                                                <p className="truncate text-base font-semibold text-blue-950">
+                                                <p className="truncate text-base font-semibold text-blue-950 dark:text-blue-100">
                                                     {selectedPdl.name}
                                                 </p>
-                                                <p className="text-xs text-blue-700">
+                                                <p className="text-xs text-blue-700 dark:text-blue-200">
                                                     Case: {selectedPdl.case_number}
                                                 </p>
-                                                <p className="text-xs text-blue-700">
+                                                <p className="text-xs text-blue-700 dark:text-blue-200">
                                                     Status: {selectedPdl.status}
                                                 </p>
                                             </div>
@@ -909,6 +938,12 @@ export default function PdlProfiles({
                     ) : null}
                 </DialogContent>
             </Dialog>
+
+            {showPhotoSnackbar ? (
+                <div className="bg-primary text-primary-foreground fixed right-4 bottom-4 z-[70] rounded-md px-4 py-2 text-sm font-medium shadow-lg">
+                    Profile photo saved successfully.
+                </div>
+            ) : null}
         </AppLayout>
     );
 }

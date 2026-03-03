@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -832,9 +833,18 @@ class PdlController extends Controller
         $sentenceYears = $this->normalizeSentenceYears($validated['sentence_years'] ?? null);
         $sentenceStartDate = $this->normalizeSentenceStartDate($validated['sentence_start_date'] ?? null, $sentenceYears);
         $hasProfilePhotoColumn = Schema::hasColumn('pdls', 'profile_photo_path');
-        $profilePhotoPath = $request->hasFile('profile_photo')
-            ? $request->file('profile_photo')?->store('pdl-profile-photos', 'public')
-            : null;
+        $uploadResult = $hasProfilePhotoColumn
+            ? $this->uploadProfilePhotoToCloudinary($request)
+            : ['url' => null, 'error' => null];
+        $profilePhotoPath = $uploadResult['url'];
+
+        if ($hasProfilePhotoColumn && $request->hasFile('profile_photo') && $profilePhotoPath === null) {
+            return back()
+                ->withErrors(['profile_photo' => $uploadResult['error'] ?? 'Cloudinary upload failed. Please check Cloudinary configuration and try again.'])
+                ->withInput();
+        }
+
+        $photoWasUploaded = $profilePhotoPath !== null;
 
         $createData = [
             'surname' => SmartCaseFormatter::title($validated['surname']) ?? '',
@@ -881,7 +891,9 @@ class PdlController extends Controller
             'profile_photo_path' => $pdl->profile_photo_path,
         ]);
 
-        return to_route('dashboard')->with('success', 'PDL record saved successfully.');
+        return back()
+            ->with('success', 'PDL record saved successfully.')
+            ->with('photo_saved', $photoWasUploaded);
     }
 
     /**
@@ -896,13 +908,19 @@ class PdlController extends Controller
         $sentenceStartDate = $this->normalizeSentenceStartDate($validated['sentence_start_date'] ?? null, $sentenceYears);
         $hasProfilePhotoColumn = Schema::hasColumn('pdls', 'profile_photo_path');
         $profilePhotoPath = $pdl->profile_photo_path;
-        if ($hasProfilePhotoColumn && $request->hasFile('profile_photo')) {
-            $uploadedPath = $request->file('profile_photo')?->store('pdl-profile-photos', 'public');
-            if ($uploadedPath) {
-                if ($profilePhotoPath) {
-                    Storage::disk('public')->delete($profilePhotoPath);
-                }
-                $profilePhotoPath = $uploadedPath;
+        $photoWasUploaded = false;
+        if ($hasProfilePhotoColumn) {
+            $uploadResult = $this->uploadProfilePhotoToCloudinary($request);
+            $uploadedUrl = $uploadResult['url'];
+            if ($request->hasFile('profile_photo') && $uploadedUrl === null) {
+                return back()
+                    ->withErrors(['profile_photo' => $uploadResult['error'] ?? 'Cloudinary upload failed. Please check Cloudinary configuration and try again.'])
+                    ->withInput();
+            }
+
+            if ($uploadedUrl) {
+                $profilePhotoPath = $uploadedUrl;
+                $photoWasUploaded = true;
             }
         }
 
@@ -964,7 +982,9 @@ class PdlController extends Controller
             'profile_photo_path' => $pdl->profile_photo_path,
         ]);
 
-        return to_route('dashboard')->with('success', 'PDL record updated successfully.');
+        return back()
+            ->with('success', 'PDL record updated successfully.')
+            ->with('photo_saved', $photoWasUploaded);
     }
 
     /**
@@ -1172,6 +1192,7 @@ class PdlController extends Controller
             'pdl' => $pdl,
             'formatted_name' => $this->formatName($pdl),
             'sentence_tracking' => $this->buildSentenceTracking($pdl),
+            'profile_photo_url' => $this->resolveProfilePhotoUrl($pdl->profile_photo_path),
         ]);
     }
 
@@ -1288,7 +1309,115 @@ class PdlController extends Controller
             return null;
         }
 
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
         return Storage::disk('public')->url($path);
+    }
+
+    /**
+     * @return array{url:?string,error:?string}
+     */
+    private function uploadProfilePhotoToCloudinary(Request $request, string $field = 'profile_photo'): array
+    {
+        if (! $request->hasFile($field)) {
+            return ['url' => null, 'error' => null];
+        }
+
+        $file = $request->file($field);
+        if (! $file || ! $file->isValid()) {
+            return ['url' => null, 'error' => 'Selected file is invalid. Please choose another image.'];
+        }
+
+        $cloudName = trim((string) env('CLOUDINARY_CLOUD_NAME'));
+        $apiKey = trim((string) env('CLOUDINARY_API_KEY'));
+        $apiSecret = trim((string) env('CLOUDINARY_API_SECRET'));
+        $cloudinaryUrl = trim((string) env('CLOUDINARY_URL'));
+
+        if ($cloudinaryUrl !== '') {
+            $parts = parse_url($cloudinaryUrl);
+            if (is_array($parts)) {
+                $cloudName = $cloudName !== '' ? $cloudName : trim((string) ($parts['host'] ?? ''));
+                $apiKey = $apiKey !== '' ? $apiKey : trim((string) ($parts['user'] ?? ''));
+                $apiSecret = $apiSecret !== '' ? $apiSecret : trim((string) ($parts['pass'] ?? ''));
+            }
+        }
+
+        if ($cloudName === '') {
+            return ['url' => null, 'error' => 'Cloudinary cloud name is missing. Set CLOUDINARY_CLOUD_NAME or CLOUDINARY_URL.'];
+        }
+
+        $folder = trim((string) env('CLOUDINARY_FOLDER', 'pdl-profile-photos'));
+        $uploadPreset = trim((string) env('CLOUDINARY_UPLOAD_PRESET', ''));
+        $endpoint = "https://api.cloudinary.com/v1_1/{$cloudName}/image/upload";
+        $verifySsl = filter_var(env('CLOUDINARY_HTTP_VERIFY', true), FILTER_VALIDATE_BOOL);
+        $caBundle = trim((string) env('CLOUDINARY_CA_BUNDLE', ''));
+
+        $http = Http::asMultipart();
+        if ($caBundle !== '') {
+            $http = $http->withOptions(['verify' => $caBundle]);
+        } elseif (! $verifySsl) {
+            $http = $http->withOptions(['verify' => false]);
+        }
+
+        $response = null;
+
+        try {
+        if ($uploadPreset !== '') {
+                $response = $http
+                    ->attach('file', fopen($file->getRealPath(), 'r'), $file->getClientOriginalName())
+                    ->post($endpoint, [
+                        'upload_preset' => $uploadPreset,
+                        'folder' => $folder,
+                    ]);
+            } else {
+                if ($apiKey === '' || $apiSecret === '') {
+                    return ['url' => null, 'error' => 'Cloudinary API credentials are missing. Set CLOUDINARY_API_KEY/API_SECRET or CLOUDINARY_URL.'];
+                }
+
+                $timestamp = time();
+                $paramsToSign = [
+                    'folder' => $folder,
+                    'timestamp' => $timestamp,
+                ];
+                ksort($paramsToSign);
+                $signature = sha1(urldecode(http_build_query($paramsToSign)).$apiSecret);
+
+                $response = $http
+                    ->attach('file', fopen($file->getRealPath(), 'r'), $file->getClientOriginalName())
+                    ->post($endpoint, [
+                        'api_key' => $apiKey,
+                        'timestamp' => $timestamp,
+                        'folder' => $folder,
+                        'signature' => $signature,
+                    ]);
+            }
+        } catch (\Throwable $exception) {
+            report($exception);
+            $message = $exception->getMessage();
+            if (str_contains($message, 'cURL error 60')) {
+                return ['url' => null, 'error' => 'SSL certificate verification failed (cURL 60). For local XAMPP, set CLOUDINARY_HTTP_VERIFY=false or configure CLOUDINARY_CA_BUNDLE.'];
+            }
+
+            return ['url' => null, 'error' => 'Cloudinary upload request failed: '.$message];
+        }
+
+        if (! $response || ! $response->successful()) {
+            $apiMessage = (string) $response?->json('error.message', '');
+            $status = $response?->status();
+            $message = $apiMessage !== '' ? $apiMessage : 'Cloudinary rejected the upload request.';
+
+            return ['url' => null, 'error' => "Cloudinary upload failed (HTTP {$status}): {$message}"];
+        }
+
+        $secureUrl = (string) $response->json('secure_url', '');
+
+        if ($secureUrl === '') {
+            return ['url' => null, 'error' => 'Cloudinary response did not include secure_url.'];
+        }
+
+        return ['url' => $secureUrl, 'error' => null];
     }
 
     /**

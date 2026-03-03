@@ -123,8 +123,10 @@ export default function Dashboard({
     const [search, setSearch] = useState(filters.search ?? '');
     const [selectedPdl, setSelectedPdl] = useState<PdlRecord | null>(null);
     const [isEditing, setIsEditing] = useState(false);
-    const page = usePage<{ flash?: { success?: string } }>();
+    const page = usePage<{ flash?: { success?: string; photo_saved?: boolean } }>();
     const successMessage = page.props.flash?.success;
+    const photoSaved = page.props.flash?.photo_saved === true;
+    const [showPhotoSnackbar, setShowPhotoSnackbar] = useState(false);
 
     const editForm = useForm<
         RegistrationFormData & {
@@ -190,6 +192,16 @@ export default function Dashboard({
             status_change_note: '',
         });
     }, [selectedPdl]);
+
+    useEffect(() => {
+        if (!photoSaved) {
+            return;
+        }
+
+        setShowPhotoSnackbar(true);
+        const timer = setTimeout(() => setShowPhotoSnackbar(false), 2600);
+        return () => clearTimeout(timer);
+    }, [photoSaved]);
 
     const submitEdit = (event: FormEvent) => {
         event.preventDefault();
@@ -736,6 +748,12 @@ export default function Dashboard({
                     ) : null}
                 </DialogContent>
             </Dialog>
+
+            {showPhotoSnackbar ? (
+                <div className="bg-primary text-primary-foreground fixed right-4 bottom-4 z-[70] rounded-md px-4 py-2 text-sm font-medium shadow-lg">
+                    Profile photo saved successfully.
+                </div>
+            ) : null}
         </AppLayout>
     );
 }

@@ -35,7 +35,13 @@ class PdlStoreRequest extends FormRequest
             'transferred_to' => ['nullable', 'string', 'max:255', 'required_if:status,transferred,transfered'],
             'sentence_start_date' => ['nullable', 'date'],
             'sentence_years' => ['nullable', 'integer', 'min:1', 'max:100'],
-            'profile_photo' => ['nullable', 'image', 'max:2048'],
+            'profile_photo' => [
+                'nullable',
+                'file',
+                'max:5120',
+                'extensions:jpg,jpeg,png,webp,gif,bmp,svg',
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif,image/bmp,image/svg+xml,application/octet-stream',
+            ],
             'next_hearing_date' => ['nullable', 'date'],
             'hearing_notes' => ['nullable', 'string'],
         ];
@@ -49,8 +55,9 @@ class PdlStoreRequest extends FormRequest
         return [
             'contact_number.regex' => 'Contact number must be exactly 11 digits.',
             'transferred_to.required_if' => 'Transfer destination is required when status is transferred.',
-            'profile_photo.image' => 'Profile photo must be an image file.',
-            'profile_photo.max' => 'Profile photo must not exceed 2MB.',
+            'profile_photo.extensions' => 'Profile photo must use an image file extension (jpg, jpeg, png, webp, gif, bmp, svg).',
+            'profile_photo.mimetypes' => 'Profile photo must be a valid image file.',
+            'profile_photo.max' => 'Profile photo must not exceed 5MB.',
         ];
     }
 }
