@@ -43,11 +43,11 @@ services:
       - key: QUEUE_CONNECTION
         value: database
       - key: RUN_MIGRATIONS_ON_BOOT
-        value: "false"
-      - key: RUN_DB_SEED_ON_BOOT
-        value: "false"
-      - key: RUN_SUPERADMIN_SEED_ON_BOOT
         value: "true"
+      - key: RUN_DB_SEED_ON_BOOT
+        value: "true"
+      - key: RUN_SUPERADMIN_SEED_ON_BOOT
+        value: "false"
 
   - type: worker
     name: ppjo-pdl-worker

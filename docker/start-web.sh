@@ -25,15 +25,21 @@ php artisan route:clear || true
 php artisan view:clear || true
 
 if [ "${RUN_MIGRATIONS_ON_BOOT}" = "true" ]; then
+  echo "[BOOT] Running migrations..."
   php artisan migrate --force --no-interaction
+  echo "[BOOT] Migrations completed successfully."
 fi
 
 if [ "${RUN_DB_SEED_ON_BOOT}" = "true" ]; then
+  echo "[BOOT] Running database seeders..."
   php artisan db:seed --force --no-interaction
+  echo "[BOOT] Database seeders completed successfully."
 fi
 
 if [ "${RUN_SUPERADMIN_SEED_ON_BOOT}" = "true" ]; then
+  echo "[BOOT] Running SuperAdmin seeder..."
   php artisan db:seed --class=SuperAdminSeeder --force --no-interaction
+  echo "[BOOT] SuperAdmin seeder completed successfully."
 fi
 
 php artisan storage:link || true
