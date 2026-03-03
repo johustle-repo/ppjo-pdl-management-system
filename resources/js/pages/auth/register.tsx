@@ -14,21 +14,21 @@ export default function Register() {
         <>
             <Head title="Register" />
 
-            <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 px-4 py-8">
-                <div className="w-full max-w-md rounded-2xl border border-slate-300 bg-white p-8 shadow-lg shadow-blue-950/20">
+            <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 px-4 py-8 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
+                <div className="w-full max-w-md rounded-2xl border border-slate-300 bg-white p-8 shadow-lg shadow-blue-950/20 dark:border-slate-700 dark:bg-slate-900 dark:shadow-black/40">
                     <div className="mb-6 flex items-center justify-center gap-3">
                         <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
                             <AppLogoIcon className="size-5 fill-current" />
                         </div>
-                        <p className="text-sm font-semibold tracking-wide text-slate-900">
+                        <p className="text-sm font-semibold tracking-wide text-slate-900 dark:text-slate-100">
                             PPJO Management System
                         </p>
                     </div>
 
-                    <h1 className="text-center text-2xl font-bold text-slate-900">
+                    <h1 className="text-center text-2xl font-bold text-slate-900 dark:text-slate-100">
                         Create account
                     </h1>
-                    <p className="mt-2 text-center text-sm text-slate-700">
+                    <p className="mt-2 text-center text-sm text-slate-700 dark:text-slate-300">
                         Enter your details to continue
                     </p>
 
@@ -41,7 +41,7 @@ export default function Register() {
                         {({ processing, errors }) => (
                             <>
                                 <div className="space-y-2">
-                                    <Label htmlFor="name" className="text-slate-800">
+                                    <Label htmlFor="name" className="text-slate-800 dark:text-slate-200">
                                         Name
                                     </Label>
                                     <Input
@@ -58,7 +58,7 @@ export default function Register() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="email" className="text-slate-800">
+                                    <Label htmlFor="email" className="text-slate-800 dark:text-slate-200">
                                         Email address
                                     </Label>
                                     <Input
@@ -74,7 +74,7 @@ export default function Register() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="password" className="text-slate-800">
+                                    <Label htmlFor="password" className="text-slate-800 dark:text-slate-200">
                                         Password
                                     </Label>
                                     <Input
@@ -92,7 +92,7 @@ export default function Register() {
                                 <div className="space-y-2">
                                     <Label
                                         htmlFor="password_confirmation"
-                                        className="text-slate-800"
+                                        className="text-slate-800 dark:text-slate-200"
                                     >
                                         Confirm password
                                     </Label>
@@ -122,9 +122,9 @@ export default function Register() {
                         )}
                     </Form>
 
-                    <p className="mt-5 text-center text-sm text-slate-700">
+                    <p className="mt-5 text-center text-sm text-slate-700 dark:text-slate-300">
                         Already have an account?{' '}
-                        <TextLink href={login()} tabIndex={6} className="text-blue-700">
+                        <TextLink href={login()} tabIndex={6} className="text-blue-700 dark:text-blue-300">
                             Log in
                         </TextLink>
                     </p>

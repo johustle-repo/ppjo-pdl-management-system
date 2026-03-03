@@ -237,7 +237,7 @@ export default function Dashboard({
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-3xl font-semibold text-emerald-600">
+                            <p className="text-3xl font-semibold text-emerald-600 dark:text-emerald-400">
                                 {dashboardKpis.active}
                             </p>
                         </CardContent>
@@ -249,7 +249,7 @@ export default function Dashboard({
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-3xl font-semibold text-sky-600">
+                            <p className="text-3xl font-semibold text-sky-600 dark:text-sky-400">
                                 {dashboardKpis.released}
                             </p>
                         </CardContent>
@@ -261,7 +261,7 @@ export default function Dashboard({
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-3xl font-semibold text-amber-600">
+                            <p className="text-3xl font-semibold text-amber-600 dark:text-amber-400">
                                 {dashboardKpis.transferred}
                             </p>
                         </CardContent>

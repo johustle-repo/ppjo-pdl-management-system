@@ -13,13 +13,13 @@ export default function Welcome({
         <>
             <Head title="PPJO Management System" />
 
-            <div className="relative min-h-screen overflow-hidden bg-blue-900 px-4 py-4 text-slate-900 lg:px-6 lg:py-6">
-                <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-blue-200/60 blur-3xl" />
-                <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-emerald-200/50 blur-3xl" />
+            <div className="relative min-h-screen overflow-hidden bg-blue-900 px-4 py-4 text-slate-900 lg:px-6 lg:py-6 dark:bg-slate-950 dark:text-slate-100">
+                <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-blue-200/60 blur-3xl dark:bg-blue-500/20" />
+                <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-emerald-200/50 blur-3xl dark:bg-emerald-500/10" />
 
-                <main className="relative mx-auto flex h-[calc(100vh-2rem)] w-full max-w-6xl rounded-3xl border border-slate-200/90 bg-white/90 p-4 shadow-[0_30px_70px_-45px_rgba(15,23,42,0.55)] backdrop-blur lg:h-[calc(100vh-3rem)] lg:p-6">
+                <main className="relative mx-auto flex h-[calc(100vh-2rem)] w-full max-w-6xl rounded-3xl border border-slate-200/90 bg-white/90 p-4 shadow-[0_30px_70px_-45px_rgba(15,23,42,0.55)] backdrop-blur lg:h-[calc(100vh-3rem)] lg:p-6 dark:border-slate-700 dark:bg-slate-900/90">
                     <div className="grid h-full w-full gap-4 lg:grid-cols-2">
-                        <section className="relative hidden overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 lg:block">
+                        <section className="relative hidden overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 lg:block dark:border-slate-700 dark:bg-slate-800">
                             <img
                                 src="https://pia.gov.ph/uploads/2024/02/5e62f673f3a2c08372a00b30f3923386.jpg"
                                 alt="Pangasinan jail facility"
@@ -38,11 +38,11 @@ export default function Welcome({
                                 </span>
                             </div>
 
-                            <h1 className="mt-3 text-2xl font-extrabold leading-tight text-slate-900 lg:text-3xl">
+                            <h1 className="mt-3 text-2xl font-extrabold leading-tight text-slate-900 lg:text-3xl dark:text-slate-100">
                                 PDL Record Management and Operations Dashboard
                             </h1>
 
-                            <p className="mt-3 text-sm leading-relaxed text-slate-600 lg:text-base">
+                            <p className="mt-3 text-sm leading-relaxed text-slate-600 lg:text-base dark:text-slate-300">
                                 A centralized platform for intake, case tracking, status
                                 monitoring, card printing, and export-ready reporting.
                                 Built to help teams manage PDL records accurately and
@@ -50,11 +50,11 @@ export default function Welcome({
                             </p>
 
                             <div className="mt-4 grid gap-3">
-                                <section className="rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-4">
-                                    <h2 className="text-xs font-bold uppercase tracking-wide text-slate-700">
+                                <section className="rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-4 dark:border-slate-700 dark:from-slate-800 dark:to-slate-900">
+                                    <h2 className="text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-slate-200">
                                         What You Can Do
                                     </h2>
-                                    <ul className="mt-2 space-y-1.5 text-xs text-slate-600">
+                                    <ul className="mt-2 space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
                                         <li className="flex items-start gap-2">
                                             <span className="mt-1 h-2 w-2 rounded-full bg-blue-600" />
                                             Register new PDL records
@@ -74,11 +74,11 @@ export default function Welcome({
                                     </ul>
                                 </section>
 
-                                <section className="rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-4">
-                                    <h2 className="text-xs font-bold uppercase tracking-wide text-slate-700">
+                                <section className="rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-4 dark:border-slate-700 dark:from-slate-800 dark:to-slate-900">
+                                    <h2 className="text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-slate-200">
                                         Data Standards
                                     </h2>
-                                    <ul className="mt-2 space-y-1.5 text-xs text-slate-600">
+                                    <ul className="mt-2 space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
                                         <li className="flex items-start gap-2">
                                             <span className="mt-1 h-2 w-2 rounded-full bg-emerald-600" />
                                             Contact number: digits only
@@ -103,7 +103,7 @@ export default function Welcome({
                                 {auth.user ? (
                                     <Link
                                         href={dashboard()}
-                                        className="rounded-lg bg-slate-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
+                                        className="rounded-lg bg-slate-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
                                     >
                                         Open Dashboard
                                     </Link>

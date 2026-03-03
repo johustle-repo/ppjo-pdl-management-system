@@ -62,7 +62,7 @@ const rightNavItems: NavItem[] = [
 ];
 
 const activeItemStyles =
-    'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
+    'bg-accent text-accent-foreground';
 
 export function AppHeader({ breadcrumbs = [] }: Props) {
     const page = usePage();
@@ -241,7 +241,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
             </div>
             {breadcrumbs.length > 1 && (
                 <div className="flex w-full border-b border-sidebar-border/70">
-                    <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
+                    <div className="text-muted-foreground mx-auto flex h-12 w-full items-center justify-start px-4 md:max-w-7xl">
                         <Breadcrumbs breadcrumbs={breadcrumbs} />
                     </div>
                 </div>

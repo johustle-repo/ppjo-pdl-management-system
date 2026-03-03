@@ -193,7 +193,7 @@ export default function SentenceTracker({
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-3xl font-semibold text-slate-600">
+                            <p className="text-3xl font-semibold text-slate-600 dark:text-slate-300">
                                 {summary.completed}
                             </p>
                         </CardContent>

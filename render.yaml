@@ -36,8 +36,6 @@ services:
         sync: false
       - key: DB_PASSWORD
         sync: false
-      - key: DB_SSLMODE
-        value: require
       - key: SESSION_DRIVER
         value: file
       - key: CACHE_STORE
@@ -50,14 +48,6 @@ services:
         value: "false"
       - key: RUN_SUPERADMIN_SEED_ON_BOOT
         value: "true"
-      - key: MONGODB_MIRROR_ENABLED
-        value: "false"
-      - key: MONGODB_URI
-        sync: false
-      - key: MONGODB_DATABASE
-        sync: false
-      - key: MONGODB_MIRROR_COLLECTION
-        value: pdls_mirror
 
   - type: worker
     name: ppjo-pdl-worker
@@ -95,20 +85,10 @@ services:
         sync: false
       - key: DB_PASSWORD
         sync: false
-      - key: DB_SSLMODE
-        value: require
       - key: SESSION_DRIVER
         value: file
       - key: CACHE_STORE
         value: file
       - key: QUEUE_CONNECTION
         value: database
-      - key: MONGODB_MIRROR_ENABLED
-        value: "false"
-      - key: MONGODB_URI
-        sync: false
-      - key: MONGODB_DATABASE
-        sync: false
-      - key: MONGODB_MIRROR_COLLECTION
-        value: pdls_mirror
 

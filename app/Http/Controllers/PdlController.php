@@ -6,7 +6,6 @@ use App\Http\Requests\PdlStoreRequest;
 use App\Models\AuditLog;
 use App\Models\Pdl;
 use App\Models\PdlStatusHistory;
-use App\Support\MongoPdlMirror;
 use App\Support\SmartCaseFormatter;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -872,7 +871,6 @@ class PdlController extends Controller
         }
 
         $this->recordStatusChange($request, $pdl, null, $pdl->status, 'Initial status');
-        MongoPdlMirror::syncPdl($pdl);
         $this->logAudit($request, 'pdl.create', 'pdl', $pdl->id, [
             'status' => $pdl->status,
             'transferred_to' => $pdl->transferred_to,
@@ -955,7 +953,6 @@ class PdlController extends Controller
             );
         }
 
-        MongoPdlMirror::syncPdl($pdl);
         $this->logAudit($request, 'pdl.update', 'pdl', $pdl->id, [
             'old_status' => $oldStatus,
             'new_status' => $pdl->status,
@@ -1018,7 +1015,6 @@ class PdlController extends Controller
 
             if ($dirty) {
                 $pdl->save();
-                MongoPdlMirror::syncPdl($pdl);
                 $count++;
 
                 if ($oldStatus !== $pdl->status) {
