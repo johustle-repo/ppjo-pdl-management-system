@@ -834,7 +834,7 @@ export default function PdlProfiles({
                                 </form>
                             ) : (
                                 <>
-                                    <div className="space-y-4 rounded-lg border border-blue-200 bg-blue-50 p-4 text-slate-900 dark:border-blue-400/40 dark:bg-blue-950/20 dark:text-slate-100">
+                                    <div className="space-y-4 rounded-lg border border-blue-400/40 bg-blue-950/20 p-4 text-slate-100">
                                         <div className="flex items-center gap-3">
                                             {selectedPdl.profile_photo_url ? (
                                                 <img
@@ -843,18 +843,18 @@ export default function PdlProfiles({
                                                     className="h-20 w-20 rounded-full border-2 border-blue-300 object-cover"
                                                 />
                                             ) : (
-                                                <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-white text-xs text-blue-700 dark:border-blue-300/50 dark:bg-blue-900/40 dark:text-blue-200">
+                                                <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300/50 bg-blue-900/40 text-xs text-blue-200">
                                                     No Photo
                                                 </div>
                                             )}
                                             <div className="min-w-0">
-                                                <p className="truncate text-base font-semibold text-blue-950 dark:text-blue-100">
+                                                <p className="truncate text-base font-semibold text-blue-100">
                                                     {selectedPdl.name}
                                                 </p>
-                                                <p className="text-xs text-blue-700 dark:text-blue-200">
+                                                <p className="text-xs text-blue-200">
                                                     Case: {selectedPdl.case_number}
                                                 </p>
-                                                <p className="text-xs text-blue-700 dark:text-blue-200">
+                                                <p className="text-xs text-blue-200">
                                                     Status: {selectedPdl.status}
                                                 </p>
                                             </div>
